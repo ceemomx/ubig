@@ -17,9 +17,9 @@ router.post('/admin/up/photos', (req, res) => {
         fs.copyFileSync(file.path, path.join(__dirname,'source', file.name))
         fs.unlinkSync(file.path)
     })
-    form.parse(req, (err, feilds, files) => {
+    form.on('end', function() {
         res.end('parse end')
-    })
+    });
 
 })
 
