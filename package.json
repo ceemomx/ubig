@@ -3,9 +3,9 @@
     "version": "0.0.1",
     "private": false,
     "scripts": {
-      "start": "node index"
+        "start": "node index"
     },
     "dependencies": {
-        
+        "formidable": "^1.2.1"
     }
-  }
+}
