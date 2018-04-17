@@ -7,8 +7,8 @@
 |- public/
     |- admin/
 |- source/
-|- moudules/
 |- index.js
+|- g.js
 |- package.json
 ```
 

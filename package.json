@@ -1,0 +1,11 @@
+{
+    "name": "ubig",
+    "version": "0.0.1",
+    "private": false,
+    "scripts": {
+      "start": "node index"
+    },
+    "dependencies": {
+        
+    }
+  }
