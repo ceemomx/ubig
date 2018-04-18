@@ -1,3 +1,11 @@
 h4 {
     color: #f33;
 }
+
+.photo {
+    display: none;
+}
+
+.photo-preview {
+    width: 150px;
+}

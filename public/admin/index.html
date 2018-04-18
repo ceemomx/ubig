@@ -11,27 +11,63 @@
 
 <body>
     <h4>ubig admin</h4>
-    <input type="file" id="image" multiple>
-    <button id="sc">sc</button>
+    <button id="add">添加</button>
+    <ul class="album">
+
+    </ul>
+
+    <div class="model">
+        <ul class="preview">
+            <li>
+                <label>
+                    上传照片
+                    <img src="" class="photo-preview">
+                    <input type="file" name="files" class="photo">
+                    <input type="text" class="note">
+                </label>
+            </li>
+        </ul>
+        <a id="addNewPhoto">添加照片</a>
+        <input type="month" id="date">
+        <input type="text" id="title">
+        <button id="sc">sc</button>
+    </div>
 </body>
 <script src="http://apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js"></script>
 <script>
-    $.fn.upload = function (opts) {
-        var _this = $(this);
-
-    }
-</script>
-<script>
+    $('#addNewPhoto').click(function () {
+        $('.preview').append('<li>\
+                <label>\
+                    上传照片\
+                    <img src="" class="photo-preview">\
+                    <input type="file" name="files" class="photo">\
+                    <input type="text" class="note">\
+                </label>\
+            </li>')
+    })
+    $('body').on('change', '.photo', function () {
+        var _this = $(this)
+        var obj = _this.get(0).files[0];
+        console.log(obj);
+        var fr = new FileReader();
+        fr.onload = function () {
+            _this.siblings('img').attr('src', this.result);
+        };
+        fr.readAsDataURL(obj);
+    })
     $('#sc').click(function () {
 
         var formData = new FormData();
-        var image = $('#image').get(0)
-        for (var i = image.files.length; i--;) {
-            formData.append('files', image.files[i])
-        }
-        formData.append('year', 2015)
-        formData.append('month', 10)
-        formData.append('note', '今天心情不错')
+        var album = [];
+        $('.preview li').each(function(){
+            var image = $(this).find('.photo').get(0).files[0];
+            album.push({photo: image.name, note: $(this).find('.note').val()})
+            formData.append('files', image)
+        })
+        formData.append('album', JSON.stringify(album))
+        formData.append('year', $('#date').val().split('-')[0])
+        formData.append('month', $('#date').val().split('-')[1])
+        formData.append('title', $('#title').val())
         $.ajax({
             url: '/admin/up/photos',
             type: 'post',
@@ -42,6 +78,27 @@
                 console.log(data);
             }
         });
+    })
+
+    $.ajax({
+        url: '/admin/photos',
+        type: 'get',
+        success: function (data) {
+            data.forEach(function (album) {
+
+                $('.album').append(
+                    '<li class="item">\
+                        <a href="/admin/album?year=' + album.year + '&month=' + album.month + '&title=' + album.title + '">\
+                            <div class="cover">\
+                                <img src="/photos/' + album.year + '/' + album.month + '/' + album.title + '/' + album.thumb + '" alt="">\
+                            </div>\
+                            <h5 class="title"></h5>\
+                        </a>\
+                    </li>')
+            })
+
+            console.log(data)
+        }
     })
 </script>
 

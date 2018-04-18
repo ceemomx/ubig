@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>ubig-album</title>
+</head>
+
+<body>
+    album
+</body>
+<script src="http://apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js"></script>
+<script>
+    var GET = function () {
+        var e = location.href.split("?")[1] || "", e = e.split("&"), t = 0, n = e.length, r = {};
+        for (; t < n; t++)e[t] = e[t].split("="), r[e[t][0]] = decodeURIComponent(e[t][1]);
+        return r
+    }();
+    $.ajax({
+        url: '/admin/photo/' + GET.year + '/' + GET.month + '/' + GET.title,
+        type: 'GET',
+        success: function (data) {
+            console.log(data)
+        }
+    })
+</script>
+
+</html>

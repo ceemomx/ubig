@@ -14,9 +14,35 @@ router.get('/info', (req, res) => {
 })
 
 router.post('/admin/up/photos', (req, res) => {
-    photo.file(req, () => {
-        res.end('parse end')
+    photo.file(req, (info) => {
+        res.json(info)
     })
 })
+
+router.get('/admin/photos', (req, res) => {
+    photo.list((list) => {
+        res.json(list)
+    })
+})
+
+router.get('/admin/album', (req, res) => {
+    res.render(path.join(staticDir, '/admin/album.html'))
+})
+
+router.get('/photos/:year/:month/:title/:image', (req, res) => {
+    res.render(path.join('source', 'images', req.params.year, req.params.month, req.params.title, req.params.image))
+})
+
+router.get('/admin/photo/:year/:month/:title', (req, res) => {
+    let albumPath = path.join(req.params.year, req.params.month, req.params.title)
+    photo.album(albumPath, (err, info) => {
+        if (err) {
+            router.notFound(res)
+        } else {
+            res.json(info)
+        }
+    })
+})
+
 
 http.createServer(router.router()).listen(4000)
