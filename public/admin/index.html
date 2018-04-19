@@ -10,64 +10,101 @@
 </head>
 
 <body>
-    <h4>ubig admin</h4>
-    <button id="add">添加</button>
+    <h4 class="title">ubig admin</h4>
+    <a id="add" class="btn">添加</a>
     <ul class="album">
 
     </ul>
 
-    <div class="model">
-        <ul class="preview">
-            <li>
-                <label>
-                    上传照片
-                    <img src="" class="photo-preview">
-                    <input type="file" name="files" class="photo">
-                    <input type="text" class="note">
-                </label>
-            </li>
-        </ul>
-        <a id="addNewPhoto">添加照片</a>
-        <input type="month" id="date">
-        <input type="text" id="title">
-        <button id="sc">sc</button>
+    <div class="modal">
+        <div class="mask"></div>
+        <div class="modal-body">
+            <div class="modal-title">
+                添加
+                <input type="month" id="date">
+                <input type="text" id="title" placeholder="相册标题">
+            </div>
+            <div class="modal-content">
+                <div class="photo-list">
+                    <ul class="preview">
+                        <li>
+                            <label>
+                                <span>上传照片</span>
+                                <div class="preview-wrapper">
+                                    <img src="" class="photo-preview">
+                                </div>
+                                <input type="file" name="files" class="photo">
+                                <input type="text" class="note" placeholder="照片描述">
+                            </label>
+                        </li>
+                    </ul>
+                    <a id="addNewPhoto">添加照片</a>
+                    <button id="sc">上传</button>
+                </div>
+                <div class="map">
+                    <h5>拖拽标记选择地点</h5>
+                    <div id="map">
+
+                    </div>
+                </div>
+
+            </div>
+        </div>
     </div>
 </body>
 <script src="http://apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js"></script>
+<script type="text/javascript" src="http://api.map.baidu.com/api?v=3.0&ak=5DWiMeBIoG7Msm2CTPC6reo2g3jEeUfu"></script>
+<script>
+    var map = new BMap.Map('map');
+    var point = new BMap.Point(108.404, 41.915);
+    map.centerAndZoom(point, 6);
+    map.enableScrollWheelZoom(true);
+    var marker = new BMap.Marker(new BMap.Point(116.404, 39.915));
+    map.addOverlay(marker); 
+    marker.enableDragging();
+
+</script>
 <script>
     $('#addNewPhoto').click(function () {
         $('.preview').append('<li>\
                 <label>\
-                    上传照片\
-                    <img src="" class="photo-preview">\
+                    <span>上传照片</span>\
+                    <div class="preview-wrapper">\
+                        <img src="" class="photo-preview">\
+                    </div>\
                     <input type="file" name="files" class="photo">\
-                    <input type="text" class="note">\
+                    <input type="text" class="note" placeholder="照片描述">\
                 </label>\
             </li>')
+    })
+    $('.mask').click(function () {
+        $('.modal').hide();
+    })
+    $('#add').click(function () {
+        $('.modal').show();
     })
     $('body').on('change', '.photo', function () {
         var _this = $(this)
         var obj = _this.get(0).files[0];
-        console.log(obj);
         var fr = new FileReader();
         fr.onload = function () {
-            _this.siblings('img').attr('src', this.result);
+            _this.siblings('.preview-wrapper').find('img').attr('src', this.result);
         };
         fr.readAsDataURL(obj);
     })
     $('#sc').click(function () {
-
         var formData = new FormData();
         var album = [];
-        $('.preview li').each(function(){
+        $('.preview li').each(function () {
             var image = $(this).find('.photo').get(0).files[0];
-            album.push({photo: image.name, note: $(this).find('.note').val()})
+            album.push({ photo: image.name, note: $(this).find('.note').val() })
             formData.append('files', image)
         })
         formData.append('album', JSON.stringify(album))
         formData.append('year', $('#date').val().split('-')[0])
         formData.append('month', $('#date').val().split('-')[1])
         formData.append('title', $('#title').val())
+        formData.append('position', JSON.stringify(marker.getPosition()))
         $.ajax({
             url: '/admin/up/photos',
             type: 'post',
@@ -92,12 +129,13 @@
                             <div class="cover">\
                                 <img src="/photos/' + album.year + '/' + album.month + '/' + album.title + '/' + album.thumb + '" alt="">\
                             </div>\
-                            <h5 class="title"></h5>\
+                            <div class="desc">\
+                                <h5 class="title">' + album.title + '</h5>\
+                                \
+                            </div>\
                         </a>\
                     </li>')
             })
-
-            console.log(data)
         }
     })
 </script>

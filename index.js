@@ -44,5 +44,16 @@ router.get('/admin/photo/:year/:month/:title', (req, res) => {
     })
 })
 
+router.get('/admin/photo/remove/:year/:month/:title', (req, res) => {
+    let albumPath = path.join(req.params.year, req.params.month, req.params.title)
+    photo.remove(albumPath, (err, info) => {
+        if (err) {
+            router.notFound(res)
+        } else {
+            res.json(info)
+        }
+    })
+})
+
 
 http.createServer(router.router()).listen(4000)

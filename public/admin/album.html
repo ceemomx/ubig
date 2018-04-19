@@ -10,6 +10,7 @@
 
 <body>
     album
+    <a id="remove">删除相册</a>
 </body>
 <script src="http://apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js"></script>
 <script>
@@ -25,6 +26,19 @@
             console.log(data)
         }
     })
+    $('#remove').click(function () {
+        $.ajax({
+            url: '/admin/photo/remove/' + GET.year + '/' + GET.month + '/' + GET.title,
+            type: 'GET',
+            success: function (data) {
+                if (data.status == 200) {
+                    alert('删除成功')
+                    location.href = '/admin'
+                }
+            }
+        })
+    })
+
 </script>
 
 </html>

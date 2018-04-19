@@ -1,11 +1,207 @@
-h4 {
-    color: #f33;
+* {
+    padding: 0;
+    margin: 0;
+    list-style: none;
+    text-decoration: none;
+    outline: none;
 }
 
-.photo {
+*::selection {
+    background: none;
+    color: inherit;
+}
+
+a:visited {
+    color: inherit;
+}
+
+h4.title {
+    color: #555;
+    font-size: 42px;
+    text-align: center;
+    line-height: 60px;
+}
+
+.btn {
+    margin: 10px auto;
+    display: block;
+    width: 100px;
+    padding: 10px 15px;
+    line-height: 15px;
+    font-size: 14px;
+    color: #fff;
+    text-align: center;
+    background: rgb(12, 196, 156);
+    cursor: pointer;
+    box-shadow: 0 0 3px rgba(150, 150, 150, 0.5);
+    text-shadow: -0.5px -0.5px 0.5px rgba(150, 150, 150, 1);
+    transition: all 0.1s;
+}
+
+.btn:hover {
+    box-shadow: 0 0 3px rgba(100, 100, 100, 0.5);
+}
+
+.btn:active {
+    background: rgb(12, 196, 156);
+    box-shadow: none;
+    text-shadow: none;
+    color: #f9f9f9;
+}
+
+.preview {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.preview li {
+    margin: 5px;
+}
+
+.preview li label {
+    display: block;
+    width: 200px;
+    border: 1px solid #ddd;
+    position: relative;
+}
+
+.preview li label .photo {
     display: none;
 }
 
+.preview li label span {
+    line-height: 200px;
+    text-align: center;
+    display: block;
+}
+
+.preview-wrapper {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    width: 200px;
+    height: 200px;
+    display: flex;
+    justify-content: center;
+    overflow: hidden;
+}
+
 .photo-preview {
-    width: 150px;
+    height: 200px;
+}
+
+.preview li label .note {
+    margin-top: 10px;
+    box-sizing: border-box;
+    width: 100%;
+    border: 0;
+    border-top: 1px solid #ddd;
+    padding: 5px 10px;
+    line-height: 14px;
+    font-size: 13px;
+    height: 35px;
+}
+
+.modal {
+    display: none;
+    width: 1300px;
+    margin: 40px auto 0;
+    position: absolute;
+    top: 0;
+    right: 0;
+    left: 0;
+    overflow: auto;
+}
+
+.modal .mask {
+    z-index: 1;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+}
+
+.modal-body {
+    margin: 40px auto 0;
+    z-index: 2;
+    position: relative;
+}
+
+.modal .modal-title {
+    height: 40px;
+    line-height: 20px;
+    background: #fff;
+    border-bottom: 1px solid #ddd;
+    box-sizing: border-box;
+    padding: 10px 20px;
+   
+}
+
+.modal .modal-content {
+    padding: 20px;
+    box-sizing: border-box;
+    background: #fff;
+    z-index: 2;
+    position: relative;
+    display: flex;
+}
+
+.photo-list {
+    width: 650px;
+}
+
+.map {
+    flex-grow: 1;
+}
+
+.map #map {
+    width: 100%;
+    height: 100%;
+}
+
+.album {
+    flex-wrap: wrap;
+    justify-content: center;
+    padding: 20px;
+    display: flex;
+}
+
+.album li {
+    margin: 20px;
+    height: 120px;
+    width: 15%;
+    box-shadow: 0 0 3px rgba(150, 150, 150, 0.3);
+    transition: all 0.3s;
+}
+
+.album li:hover {
+    box-shadow: 0 0 3px rgba(50, 50, 50, 0.3);
+}
+
+.album li a {
+    display: flex;
+}
+
+.album li img {
+    height: 120px;
+}
+
+.album li .cover {
+    width: 120px;
+    display: flex;
+    justify-content: center;
+    overflow: hidden;
+}
+
+.album li .desc {
+    padding: 10px 10px 10px 20px;
+    flex-grow: 1;
+}
+
+.album li .desc h5 {
+    font-size: 16px;
+    font-weight: 100;
+    color: #555;
 }
