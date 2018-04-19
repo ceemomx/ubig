@@ -44,9 +44,22 @@ router.get('/admin/photo/:year/:month/:title', (req, res) => {
     })
 })
 
-router.get('/admin/photo/remove/:year/:month/:title', (req, res) => {
+router.get('/admin/photo/remove/:year/:month/:title/:image', (req, res) => {
+    let albumPath = path.join(req.params.year, req.params.month, req.params.title, req.params.image)
+    photo.removePhoto(albumPath, req.params, (data) => {
+        res.json(data)
+    })
+})
+
+router.post('/admin/edit/album', (req, res) => {
+    photo.editAlbum(req, (info) => {
+        res.json(info)
+    })
+})
+
+router.get('/admin/album/remove/:year/:month/:title', (req, res) => {
     let albumPath = path.join(req.params.year, req.params.month, req.params.title)
-    photo.remove(albumPath, (err, info) => {
+    photo.removeAlbum(albumPath, req.params, (err, info) => {
         if (err) {
             router.notFound(res)
         } else {

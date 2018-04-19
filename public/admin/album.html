@@ -5,30 +5,148 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="css/style.css">
     <title>ubig-album</title>
 </head>
 
 <body>
-    album
-    <a id="remove">删除相册</a>
+    <div id="app">
+        <a id="remove">删除相册</a>
+        <a id="add" @click="addPhoto()">添加照片</a>
+        <a id="save" @click="editAlbum()">保存</a>
+        <ul class="preview">
+            <li v-for="(photo,index) in album.photos">
+                <a @click="removePhoto(photo, index)" v-if="!photo.uploading">删除</a>
+                <label>
+
+                    <span>{{!photo.photo? '上传照片' : ''}}</span>
+                    <div class="preview-wrapper" v-if="photo.photo">
+                        <img v-if="!photo.uploading" :src="photoUrl + photo.photo" class="photo-preview">
+                        <img v-if="photo.uploading" :src="photo.photo" class="photo-preview">
+                    </div>
+                    <input v-if="photo.uploading" type="file" name="files" class="photo" @change="preview(photo, $event)">
+                    <input type="text" class="note" placeholder="照片描述" v-model="photo.note">
+                </label>
+            </li>
+        </ul>
+        <div class="map">
+            <div id="map"></div>
+        </div>
+    </div>
+
 </body>
+<script src="https://cdn.jsdelivr.net/npm/vue"></script>
 <script src="http://apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js"></script>
+<script type="text/javascript" src="http://api.map.baidu.com/api?v=3.0&ak=5DWiMeBIoG7Msm2CTPC6reo2g3jEeUfu"></script>
+<script>
+    var map = new BMap.Map('map');
+    var point = null;
+    var marker = null;
+
+</script>
 <script>
     var GET = function () {
         var e = location.href.split("?")[1] || "", e = e.split("&"), t = 0, n = e.length, r = {};
         for (; t < n; t++)e[t] = e[t].split("="), r[e[t][0]] = decodeURIComponent(e[t][1]);
         return r
     }();
+    var app = new Vue({
+        el: '#app',
+        data: {
+            album: {
+                photos: [],
+                year: '',
+                month: '',
+                title: '',
+                position: {},
+                thumb: ''
+            },
+            submit: new FormData(),
+            prefix: '/photos'
+        },
+        computed: {
+            photoUrl: function () {
+                return this.prefix + '/' + this.album.year + '/' + this.album.month + '/' + this.album.title + '/'
+            }
+        },
+        methods: {
+            preview: function (photo, e) {
+                var obj = e.target.files[0];
+                var fr = new FileReader();
+                fr.onload = function () {
+                    photo.photo = this.result
+                    photo.self = e.target
+                };
+                fr.readAsDataURL(obj);
+            },
+            addPhoto: function () {
+                this.album.photos.push({
+                    photo: '',
+                    note: '',
+                    uploading: true
+                })
+            },
+            removePhoto: function (photo, index) {
+                var _this = this;
+                $.ajax({
+                    url: '/admin/photo/remove/' + this.album.year + '/' + this.album.month + '/' + this.album.title + '/' + photo.photo,
+                    type: 'GET',
+                    success: function (data) {
+                        _this.album.photos.splice(index, 1)
+                    }
+                })
+            },
+            editAlbum: function () {
+                var formData = new FormData();
+                var album = [];
+                this.album.photos.forEach(function (photo) {
+                    if (photo.uploading) {
+                        var image = photo.self.files[0];
+                        album.push({ photo: image.name, note: photo.note })
+                        formData.append('files', image)
+                    }
+                })
+
+                formData.append('album', JSON.stringify(album))
+                formData.append('year', app.album.year)
+                formData.append('month', app.album.month)
+                formData.append('title', app.album.title)
+                formData.append('position', JSON.stringify(marker.getPosition()))
+                formData.append('thumb', app.album.thumb)
+                $.ajax({
+                    url: '/admin/edit/album',
+                    type: 'post',
+                    data: formData,
+                    processData: false,
+                    contentType: false,
+                    success: function (data) {
+                        console.log(data);
+                    }
+                });
+            }
+        }
+    })
+
+
     $.ajax({
         url: '/admin/photo/' + GET.year + '/' + GET.month + '/' + GET.title,
         type: 'GET',
         success: function (data) {
-            console.log(data)
+            app.album = data;
+            point = new BMap.Point(data.position.lng, data.position.lat);
+            map.centerAndZoom(point, 6);
+            map.enableScrollWheelZoom(true);
+            marker = new BMap.Marker(point);
+            map.addOverlay(marker);
+            marker.enableDragging();
         }
+    })
+    $('#photoList').on('click', 'li img', function () {
+        console.log($(this).attr('data-name'))
     })
     $('#remove').click(function () {
         $.ajax({
-            url: '/admin/photo/remove/' + GET.year + '/' + GET.month + '/' + GET.title,
+            url: '/admin/album/remove/' + GET.year + '/' + GET.month + '/' + GET.title,
             type: 'GET',
             success: function (data) {
                 if (data.status == 200) {
