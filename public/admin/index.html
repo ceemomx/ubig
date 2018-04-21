@@ -12,6 +12,8 @@
 <body>
     <h4 class="title">ubig admin</h4>
     <a id="add" class="btn">添加</a>
+    <a id="clear" class="btn">清理</a>
+    <a id="generate" class="btn">生成</a>
     <ul class="album">
 
     </ul>
@@ -60,7 +62,7 @@
     map.centerAndZoom(point, 6);
     map.enableScrollWheelZoom(true);
     var marker = new BMap.Marker(new BMap.Point(116.404, 39.915));
-    map.addOverlay(marker); 
+    map.addOverlay(marker);
     marker.enableDragging();
 </script>
 <script>
@@ -75,6 +77,22 @@
                     <input type="text" class="note" placeholder="照片描述">\
                 </label>\
             </li>')
+    })
+    $('#clear').click(function () {
+        $.ajax({
+            url: '/clean',
+            success: function (data) {
+                console.log(data)
+            }
+        })
+    })
+    $('#generate').click(function () {
+        $.ajax({
+            url: '/generate',
+            success: function (data) {
+                console.log(data)
+            }
+        })
     })
     $('.mask').click(function () {
         $('.modal').hide();
@@ -112,6 +130,7 @@
             contentType: false,
             success: function (data) {
                 console.log(data);
+                location.href = '/admin'
             }
         });
     })

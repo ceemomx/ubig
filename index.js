@@ -2,9 +2,10 @@ const http = require('http')
 const fs = require('fs')
 const path = require('path')
 const staticDir = path.join(__dirname, 'public')
-const sourceDir = path.join(__dirname, 'source')
+const sourceDir = path.join(__dirname, 'source', 'assets')
 let router = require('./lib/router')
 let photo = require('./lib/photo')
+let generator = require('./utils/g')
 
 router.setStatic(staticDir)
 photo.source(sourceDir)
@@ -20,7 +21,9 @@ router.post('/admin/up/photos', (req, res) => {
 })
 
 router.get('/admin/photos', (req, res) => {
-    photo.list((list) => {
+    photo.list((err, list) => {
+        err ?
+        res.end(err) :
         res.json(list)
     })
 })
@@ -30,7 +33,7 @@ router.get('/admin/album', (req, res) => {
 })
 
 router.get('/photos/:year/:month/:title/:image', (req, res) => {
-    res.render(path.join('source', 'images', req.params.year, req.params.month, req.params.title, req.params.image))
+    res.render(path.join(sourceDir, 'images', req.params.year, req.params.month, req.params.title, req.params.image))
 })
 
 router.get('/admin/photo/:year/:month/:title', (req, res) => {
@@ -55,6 +58,17 @@ router.post('/admin/edit/album', (req, res) => {
     photo.editAlbum(req, (info) => {
         res.json(info)
     })
+})
+
+router.get('/clean', (req, res) => {
+    photo.cleanDir()
+    res.end('200')
+})
+
+router.get('/generate', (req, res) => {
+    generator.setBaseDir(sourceDir)
+    generator.generate()
+    res.end('200')
 })
 
 router.get('/admin/album/remove/:year/:month/:title', (req, res) => {
