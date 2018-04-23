@@ -5,13 +5,13 @@ var note = []
 
 module.exports = {
     generate() {
-        fs.readdir(path.join(base, 'images'), (err, years) => {
+        fs.readdir(path.join(base, 'albums'), (err, years) => {
             years.forEach((year) => {
-                let months = fs.readdirSync(path.join(base, 'images', year))
+                let months = fs.readdirSync(path.join(base, 'albums', year))
                 months.forEach((month) => {
-                    let gallys = fs.readdirSync(path.join(base, 'images', year, month))
+                    let gallys = fs.readdirSync(path.join(base, 'albums', year, month))
                     gallys.forEach((gally) => {
-                        let gallyInfo = JSON.parse(fs.readFileSync(path.join(base, 'images', year, month, gally, 'info.json'), { encoding: 'utf8' }))
+                        let gallyInfo = JSON.parse(fs.readFileSync(path.join(base, 'albums', year, month, gally, 'info.json'), { encoding: 'utf8' }))
                         note.push(gallyInfo)
                     })
                 })
