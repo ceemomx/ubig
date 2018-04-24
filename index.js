@@ -5,7 +5,7 @@ const staticDir = path.join(__dirname, 'public')
 const sourceDir = path.join(__dirname, 'source')
 let router = require('./lib/router')
 let photo = require('./lib/photo')
-let generator = require('./utils/g')
+let generator = require('./lib/generator')
 
 router.setStatic(staticDir)
 photo.source(sourceDir)

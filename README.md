@@ -1,24 +1,30 @@
 # ubig
 
+基于百度地图开放API 开发的地图相册
+
+
 ##### 项目结构
 
 ```
-|- utils/
+|- lib/
 |- public/
     |- admin/
 |- source/
+    |- albums/
+|- template/
+    |- default/
 |- index.js
-|- g.js
+|- config.js
+|- render.js
 |- package.json
 ```
 
-##### 依赖
 
- [GraphicsMagick](http://www.graphicsmagick.org/) 或 [ImageMagick](http://www.imagemagick.org/)
 
-    brew install imagemagick
+需要在百度地图开放API中申请key
+在config.js map key 填入
 
-    brew install graphicsmagick
+
 
 
 ##### License

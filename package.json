@@ -3,7 +3,8 @@
     "version": "0.0.1",
     "private": false,
     "scripts": {
-        "start": "node index"
+        "start": "node index",
+        "r": "node render"
     },
     "dependencies": {
         "formidable": "^1.2.1",

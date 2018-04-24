@@ -6,7 +6,7 @@
     <head>
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <title>for fun</title>
+        <title>{{user.title}}</title>
         <meta name="description" content="">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <link rel="stylesheet" href="assets/plugins/fancybox/jquery.fancybox.min.css">
@@ -14,13 +14,12 @@
     </head>
     <body>
         <div class="wrapper">
-            <h4>{{title}}</h4>
             <div id="map"></div>
         </div>
     </body>
     <script src="assets/js/note.js"></script>
     <script src="http://apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js"></script>
     <script src="assets/plugins/fancybox/jquery.fancybox.min.js"></script>
-    <script type="text/javascript" src="http://api.map.baidu.com/api?v=3.0&ak=5DWiMeBIoG7Msm2CTPC6reo2g3jEeUfu"></script>
+    <script type="text/javascript" src="http://api.map.baidu.com/api?v=3.0&ak={{user.map.key}}"></script>
     <script src="assets/js/map.js"></script>
 </html>
