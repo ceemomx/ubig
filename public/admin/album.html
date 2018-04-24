@@ -14,6 +14,8 @@
         <a id="remove">删除相册</a>
         <a id="add" @click="addPhoto()">添加照片</a>
         <a id="save" @click="editAlbum()">保存</a>
+        <input type="text" v-model="album.title">
+        <input type="month" v-model="date" @change="setDate($event)">
         <ul class="preview">
             <li v-for="(photo,index) in album.photos">
                 <a @click="removePhoto(photo, index)" v-if="!photo.uploading">删除</a>
@@ -21,7 +23,7 @@
 
                     <span>{{!photo.photo? '上传照片' : ''}}</span>
                     <div class="preview-wrapper" v-if="photo.photo">
-                        <img v-if="!photo.uploading" :src="photoUrl + photo.photo" class="photo-preview">
+                        <img v-if="!photo.uploading" :src="prefix + photo.photo" class="photo-preview">
                         <img v-if="photo.uploading" :src="photo.photo" class="photo-preview">
                     </div>
                     <input v-if="photo.uploading" type="file" name="files" class="photo" @change="preview(photo, $event)">
@@ -29,9 +31,9 @@
                 </label>
             </li>
         </ul>
-        <div class="map">
-            <div id="map"></div>
-        </div>
+    </div>
+    <div class="map">
+        <div id="map" style="height:300px"></div>
     </div>
 
 </body>
@@ -42,7 +44,6 @@
     var map = new BMap.Map('map');
     var point = null;
     var marker = null;
-
 </script>
 <script>
     var GET = function () {
@@ -50,6 +51,7 @@
         for (; t < n; t++)e[t] = e[t].split("="), r[e[t][0]] = decodeURIComponent(e[t][1]);
         return r
     }();
+    var origin = {};
     var app = new Vue({
         el: '#app',
         data: {
@@ -65,11 +67,16 @@
             prefix: '/photos'
         },
         computed: {
-            photoUrl: function () {
-                return this.prefix + '/' + this.album.year + '/' + this.album.month + '/' + this.album.title + '/'
+            date: function(){
+                return this.album.year + '-' + this.album.month
             }
         },
         methods: {
+            setDate: function(e) {
+                var date = e.target.value;
+                this.album.year = date.split('-')[0];
+                this.album.month = date.split('-')[1];
+            },
             preview: function (photo, e) {
                 var obj = e.target.files[0];
                 var fr = new FileReader();
@@ -113,6 +120,7 @@
                 formData.append('title', app.album.title)
                 formData.append('position', JSON.stringify(marker.getPosition()))
                 formData.append('thumb', app.album.thumb)
+                formData.append('origin', JSON.stringify(origin))
                 $.ajax({
                     url: '/admin/edit/album',
                     type: 'post',
@@ -121,6 +129,7 @@
                     contentType: false,
                     success: function (data) {
                         console.log(data);
+                        location.href = '/admin/album?year=' + data.year + '&month=' + data.month + '&title=' + data.title
                     }
                 });
             }
@@ -132,7 +141,11 @@
         url: '/admin/photo/' + GET.year + '/' + GET.month + '/' + GET.title,
         type: 'GET',
         success: function (data) {
-            app.album = data;
+            origin = data;
+            Object.keys(data).forEach(function(key){
+                app.album[key] = data[key]
+            })
+            app.prefix += '/' + data.year + '/' + data.month + '/' + data.title + '/';
             point = new BMap.Point(data.position.lng, data.position.lat);
             map.centerAndZoom(point, 6);
             map.enableScrollWheelZoom(true);
