@@ -1,1 +1,0 @@
-window.note = {};window.note.timeline = [{"thumb":"青州里街_thumb.jpg","photos":[{"photo":"青州里街.jpg","note":"青州里街"}],"year":"2015","month":"10","position":{"lng":116.404,"lat":39.915},"title":"青州一日游"}]
