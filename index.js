@@ -80,4 +80,8 @@ router.get('/admin/album/remove/:year/:month/:title', (req, res) => {
 })
 
 
-http.createServer(router.router()).listen(4000)
+let server = http.createServer(router.router())
+    server.listen(4000)
+    server.on('listening', () => {
+        console.log('ubig is running')
+    })

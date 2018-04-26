@@ -1,6 +1,7 @@
 const path = require('path')
-const r = require('./lib/render')
+const R = require('./lib/render')
 const config = require('./config')
+let render = new R()
 
-r.setData(config)
-r.copyFile(path.join('template', config.template), path.join('source'))
+render.setData(config)
+render.copyFile(path.join('template', config.template), path.join('source'))
