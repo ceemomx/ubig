@@ -1,6 +1,8 @@
 const http = require('http')
 const fs = require('fs')
 const path = require('path')
+const config = require('./config')
+const render = require('./render')
 const staticDir = path.join(__dirname, 'public')
 const sourceDir = path.join(__dirname, 'source')
 let router = require('./lib/router')
@@ -81,13 +83,15 @@ router.get('/admin/album/remove/:year/:month/:title', (req, res) => {
 })
 
 router.get('/admin/push', (req, res) => {
-    gitPusher.push()
-    res.end('200')
+    generator.generate(() => {
+        gitPusher.push()
+        res.end('200')
+    })
 })
 
 
 let server = http.createServer(router.router())
-    server.listen(4000)
+    server.listen(config.http.port || 4000)
     server.on('listening', () => {
         console.log('ubig is running')
         gitPusher.pull()

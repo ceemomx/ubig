@@ -10,6 +10,9 @@ let config = {
         url: '',
         branch: 'master',
         message: ''
+    },
+    http: {
+        port: 4000
     }
    
 }
