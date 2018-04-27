@@ -14,6 +14,7 @@
     <a id="add" class="btn">添加</a>
     <a id="clear" class="btn">清理</a>
     <a id="generate" class="btn">生成</a>
+    <a id="push" class="btn">提交</a>
     <ul class="album">
 
     </ul>
@@ -133,6 +134,16 @@
                 location.href = '/admin'
             }
         });
+    })
+
+    $('#push').click(function () {
+        $.ajax({
+            url: '/admin/push',
+            type: 'get',
+            success: function (data) {
+                console.log(data)
+            }
+        })
     })
 
     $.ajax({

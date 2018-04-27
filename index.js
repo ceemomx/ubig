@@ -6,6 +6,7 @@ const sourceDir = path.join(__dirname, 'source')
 let router = require('./lib/router')
 let photo = require('./lib/photo')
 let generator = require('./lib/generator')
+let gitPusher = require('./lib/git-pusher')
 
 router.setStatic(staticDir)
 photo.source(sourceDir)
@@ -79,9 +80,15 @@ router.get('/admin/album/remove/:year/:month/:title', (req, res) => {
     })
 })
 
+router.get('/admin/push', (req, res) => {
+    gitPusher.push()
+    res.end('200')
+})
+
 
 let server = http.createServer(router.router())
     server.listen(4000)
     server.on('listening', () => {
         console.log('ubig is running')
+        gitPusher.pull()
     })
