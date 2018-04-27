@@ -20,6 +20,7 @@
 ```
 
 
+---
 
 ### 1 运行相册服务
 
@@ -67,6 +68,7 @@ config.js git url 中填写git地址
 
 在后台点击提交按钮 所有source/下的静态文件将被提交到github仓库中
 
+---
 
 ### 2 静态文件目录
 
@@ -74,11 +76,15 @@ config.js git url 中填写git地址
 
 相册文件会以 年/月/相册标题 的目录形式存放在source/albums目录中
 
+---
+
 ### 3 独立域名
 
 具体请参考 [github pages custom domain](https://help.github.com/articles/using-a-custom-domain-with-github-pages/)
 
 自定义的CNAME文件存放到source/目录下 提交静态文件CNAME将一并提交上去
+
+---
 
 ### 4 模板
 
@@ -98,6 +104,8 @@ config.js git url 中填写git地址
 并且在所有引用的js的最上方
 
 创建好模板后将config.js中 template 修改为自己创建的模板文件夹的名称
+
+---
 
 ### License
 
