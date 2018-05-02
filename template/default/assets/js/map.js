@@ -41,7 +41,7 @@ var Map = function () {
     this.content = function (point) {
         var content = '<p>' + point.title + '</p>';
         content += '<a class="fancybox" data-fancybox="gallery" href="javascript:fancybox()">'
-        content += '<img class="cover" style="width:250px;min-height:60px" id="' + _this.getId(point.thumb) + '" src="' + point.prefix + point.thumb + '" /></a>'
+        content += '<img class="cover" style="width:250px;min-height:60px" id="' + _this.getId(point.thumb) + '" src="' + point.prefix + 'thumb.jpg" /></a>'
         content += '</div>'
         return content
     }

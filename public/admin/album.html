@@ -11,20 +11,29 @@
 
 <body>
     <div id="app">
-        <a id="remove">删除相册</a>
-        <a id="add" @click="addPhoto()">添加照片</a>
-        <a id="save" @click="editAlbum()">保存</a>
-        <input type="text" v-model="album.title">
-        <input type="month" v-model="date" @change="setDate($event)">
+        <div class="album-top">
+           
+            <input type="text" v-model="album.title">
+            <input type="month" v-model="date" @change="setDate($event)">
+            <div class="album-operate">
+                <a id="remove">删除相册</a>
+                <a id="add" @click="addPhoto()">添加照片</a>
+                <a id="save" @click="editAlbum()">保存</a>
+            </div>
+        </div>
+
         <ul class="preview">
             <li v-for="(photo,index) in album.photos">
-                <a @click="removePhoto(photo, index)" v-if="!photo.uploading">删除</a>
+                <div class="operate">
+                    <a @click="removePhoto(photo, index)" v-if="!photo.uploading">删除</a>
+                    <a @click="setThumb(photo)" v-if="!photo.uploading">设为封面</a>
+                </div>
+                <span class="thumb-cover-icon" v-if="album.thumb == photo.photo">封面</span>
                 <label>
-
                     <span>{{!photo.photo? '上传照片' : ''}}</span>
                     <div class="preview-wrapper" v-if="photo.photo">
-                        <img v-if="!photo.uploading" :src="prefix + photo.photo" class="photo-preview">
-                        <img v-if="photo.uploading" :src="photo.photo" class="photo-preview">
+                        <img v-if="!photo.uploading" :src="prefix + photo.photo" class="photo-preview" @load="resize">
+                        <img v-if="photo.uploading" :src="photo.photo" class="photo-preview" @load="resize">
                     </div>
                     <input v-if="photo.uploading" type="file" name="files" class="photo" @change="preview(photo, $event)">
                     <input type="text" class="note" placeholder="照片描述" v-model="photo.note">
@@ -32,8 +41,8 @@
             </li>
         </ul>
     </div>
-    <div class="map">
-        <div id="map" style="height:300px"></div>
+    <div class="map album">
+        <div id="map" style="height:500px"></div>
     </div>
 
 </body>
@@ -67,15 +76,35 @@
             prefix: '/photos'
         },
         computed: {
-            date: function(){
+            date: function () {
                 return this.album.year + '-' + this.album.month
             }
         },
         methods: {
-            setDate: function(e) {
+            resize: function(e) {
+                var target = e.target
+                var $t = $(target)
+                var width = target.naturalWidth
+                var height = target.naturalHeight
+                
+                var rate = width > height ? height / 200 : width / 200;
+                if (width > height) {
+                    $t.height(200)
+                    $t.width(width / rate)
+                    $t.css({'margin-left': -(($t.width() - 200) / 2)})
+                } else {
+                    $t.width(200)
+                    $t.height(height / rate)
+                    $t.css({'margin-top': -(($t.height() - 200) / 2)})
+                }
+            },
+            setDate: function (e) {
                 var date = e.target.value;
                 this.album.year = date.split('-')[0];
                 this.album.month = date.split('-')[1];
+            },
+            setThumb: function (photo) {
+                this.album.thumb = photo.photo;
             },
             preview: function (photo, e) {
                 var obj = e.target.files[0];
@@ -142,7 +171,7 @@
         type: 'GET',
         success: function (data) {
             origin = data;
-            Object.keys(data).forEach(function(key){
+            Object.keys(data).forEach(function (key) {
                 app.album[key] = data[key]
             })
             app.prefix += '/' + data.year + '/' + data.month + '/' + data.title + '/';
